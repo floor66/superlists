@@ -38,7 +38,8 @@ class NewVisitorTest(unittest.TestCase):
 		todo_list = self.browser.find_element_by_id('todo_list')
 		todo_list_items = self.browser.find_elements_by_tag_name('li')
 		self.assertTrue(
-			any(todo_list_item.text == '1: Buy milk, eggs and flour' for todo_list_item in todo_list_items)
+			any(todo_list_item.text == '1: Buy milk, eggs and flour' for todo_list_item in todo_list_items),
+			'New item did not appear in list'
 		)
 
 		# There is another text box for another To-Do item
