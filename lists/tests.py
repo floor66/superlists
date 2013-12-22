@@ -5,6 +5,21 @@ from django.template.loader import render_to_string
 from lists.views import home_page
 from lists.models import Item
 
+class ListViewTest(TestCase):
+
+	def test_uses_list_template(self):
+		response = self.client.get('/lists/only-one-list/')
+		self.assertTemplateUsed(response, 'list.html')
+
+	def test_shows_all_items(self):
+		Item.objects.create(text='item1')
+		Item.objects.create(text='item2')
+		
+		response = self.client.get('/lists/only-one-list/')
+		
+		self.assertContains(response, 'item1')
+		self.assertContains(response, 'item2')
+
 class ItemModelTest(TestCase):
 	
 	def test_saving_and_retrieving_items(self):
@@ -56,19 +71,9 @@ class HomePageTest(TestCase):
 		response = home_page(request)
 		
 		self.assertEqual(response.status_code, 302)
-		self.assertEqual(response['location'], '/')
+		self.assertEqual(response['location'], '/lists/only-one-list/')
 		
 	def test_home_page_only_saves_when_necessary(self):
 		request = HttpRequest()
 		home_page(request)
 		self.assertEqual(Item.objects.all().count(), 0)
-		
-	def test_home_page_shows_all_items(self):
-		Item.objects.create(text='item1')
-		Item.objects.create(text='item2')
-		
-		request = HttpRequest()
-		response = home_page(request)
-		
-		self.assertIn('item1', response.content.decode())
-		self.assertIn('item2', response.content.decode())

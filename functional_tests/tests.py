@@ -73,8 +73,8 @@ class NewVisitorTest(LiveServerTestCase):
 		
 		# Jake has his own, personal list (read: URL)
 		jakes_url = self.browser.current_url
-		self.assertRegex(jakes_list_url, 'lists/.+')
-		self.assertNotEqual(johns_list_url, jakes_list_url)
+		self.assertRegex(jakes_url, 'lists/.+')
+		self.assertNotEqual(johns_url, jakes_url)
 		
 		page_body = self.browser.find_element_by_tag_name('body').text
 		self.assertNotIn('milk, eggs', page_body)
