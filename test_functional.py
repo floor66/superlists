@@ -37,20 +37,25 @@ class NewVisitorTest(unittest.TestCase):
 		
 		todo_list = self.browser.find_element_by_id('todo_list')
 		todo_list_items = self.browser.find_elements_by_tag_name('li')
-		self.assertTrue(
-			any(todo_list_item.text == '1: Buy milk, eggs and flour' for todo_list_item in todo_list_items),
-			'New item did not appear in list'
-		)
-
+		self.assertIn('1: Buy milk, eggs and flour', [todo_list_item.text for todo_list_item in todo_list_items])
+		
 		# There is another text box for another To-Do item
 		# He types "Bake cake"
-		self.fail('Finish the test!')
+		inputbox = self.browser.find_element_by_id('new_todo_item')
+		inputbox.send_keys('Bake cake')
 
 		# He hits enter, the page updates, and the item is shown underneath:
 		# "2: Bake cake"
+		inputbox.send_keys(Keys.ENTER)
+		
+		todo_list = self.browser.find_element_by_id('todo_list')
+		todo_list_items = self.browser.find_elements_by_tag_name('li')
+		self.assertIn('1: Buy milk, eggs and flour', [todo_list_item.text for todo_list_item in todo_list_items])
+		self.assertIn('2: Bake cake', [todo_list_item.text for todo_list_item in todo_list_items])
 		
 		# John sees that the website remembers his To-Do list. He has a unique URL that points to his list specifically
 		# He visits this URL, it works.
+		self.fail('FT not finished yet')
 
 		# Satisfied, he goes to have a beer.
 		
