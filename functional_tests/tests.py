@@ -1,8 +1,9 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
 	def setUp(self):
 		self.browser = webdriver.Chrome('C:/chromedriver.exe')
@@ -18,7 +19,7 @@ class NewVisitorTest(unittest.TestCase):
 	def test_can_start_a_list_and_retrieve_it_later(self):
 		# John needs to maintain a To-Do list.
 		# He goes online to a website that provides this feature.
-		self.browser.get('http://localhost:8000')
+		self.browser.get(self.live_server_url)
 		self.browser.implicitly_wait(3)
 
 		# He sees the words To-Do in the title of his browser so he knows he's in the right place
@@ -59,7 +60,4 @@ class NewVisitorTest(unittest.TestCase):
 		self.fail('FT not finished yet')
 
 		# Satisfied, he goes to have a beer.
-		
-	if __name__ == '__main__':
-		unittest.main(warnings='ignore')
 		
