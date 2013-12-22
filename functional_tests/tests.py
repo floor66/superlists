@@ -41,6 +41,8 @@ class NewVisitorTest(LiveServerTestCase):
 		# "1: Buy milk, eggs and flour"
 		inputbox.send_keys(Keys.ENTER)
 		
+		johns_url = self.browser.current_url
+		self.assertRegex(johns_url, '/lists/.+')
 		self.list_item_in_list('1: Buy milk, eggs and flour')
 		
 		# There is another text box for another To-Do item
@@ -55,9 +57,27 @@ class NewVisitorTest(LiveServerTestCase):
 		self.list_item_in_list('1: Buy milk, eggs and flour')
 		self.list_item_in_list('2: Bake cake')
 		
-		# John sees that the website remembers his To-Do list. He has a unique URL that points to his list specifically
-		# He visits this URL, it works.
-		self.fail('FT not finished yet')
-
-		# Satisfied, he goes to have a beer.
+		# A new user visits the site: Jake
+		self.browser.quit()
+		self.browser = webdriver.Chrome('C:/chromedriver.exe')
+		self.browser.get(self.live_server_url)
 		
+		page_body = self.browser.find_element_by_tag_name('body').text
+		self.assertNotIn('milk, eggs', page_body)
+		self.assertNotIn('cake', page_body)
+		
+		# Jake also has a few items he'd like to put on a To-Do list
+		inputbox = self.browser.find_element_by_id('new_todo_item')
+		inputbox.send_keys('Pickup kids after work')
+		inputbox.send_keys(Keys.ENTER)
+		
+		# Jake has his own, personal list (read: URL)
+		jakes_url = self.browser.current_url
+		self.assertRegex(jakes_list_url, 'lists/.+')
+		self.assertNotEqual(johns_list_url, jakes_list_url)
+		
+		page_body = self.browser.find_element_by_tag_name('body').text
+		self.assertNotIn('milk, eggs', page_body)
+		self.assertIn('kids', page_body)
+		
+		# Jake is happy now. He goes to sleep
