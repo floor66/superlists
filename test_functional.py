@@ -10,6 +10,11 @@ class NewVisitorTest(unittest.TestCase):
 	def tearDown(self):
 		self.browser.quit()
 		
+	def list_item_in_list(self, list_item_text):
+		todo_list = self.browser.find_element_by_id('todo_list')
+		todo_list_items = self.browser.find_elements_by_tag_name('li')
+		self.assertIn(list_item_text, [todo_list_item.text for todo_list_item in todo_list_items])
+		
 	def test_can_start_a_list_and_retrieve_it_later(self):
 		# John needs to maintain a To-Do list.
 		# He goes online to a website that provides this feature.
@@ -35,9 +40,7 @@ class NewVisitorTest(unittest.TestCase):
 		# "1: Buy milk, eggs and flour"
 		inputbox.send_keys(Keys.ENTER)
 		
-		todo_list = self.browser.find_element_by_id('todo_list')
-		todo_list_items = self.browser.find_elements_by_tag_name('li')
-		self.assertIn('1: Buy milk, eggs and flour', [todo_list_item.text for todo_list_item in todo_list_items])
+		self.list_item_in_list('1: Buy milk, eggs and flour')
 		
 		# There is another text box for another To-Do item
 		# He types "Bake cake"
@@ -48,10 +51,8 @@ class NewVisitorTest(unittest.TestCase):
 		# "2: Bake cake"
 		inputbox.send_keys(Keys.ENTER)
 		
-		todo_list = self.browser.find_element_by_id('todo_list')
-		todo_list_items = self.browser.find_elements_by_tag_name('li')
-		self.assertIn('1: Buy milk, eggs and flour', [todo_list_item.text for todo_list_item in todo_list_items])
-		self.assertIn('2: Bake cake', [todo_list_item.text for todo_list_item in todo_list_items])
+		self.list_item_in_list('1: Buy milk, eggs and flour')
+		self.list_item_in_list('2: Bake cake')
 		
 		# John sees that the website remembers his To-Do list. He has a unique URL that points to his list specifically
 		# He visits this URL, it works.
