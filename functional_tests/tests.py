@@ -6,7 +6,7 @@ import unittest
 class NewVisitorTest(LiveServerTestCase):
 
 	def setUp(self):
-		self.browser = webdriver.Chrome('C:/chromedriver.exe')
+		self.browser = webdriver.Firefox()
 
 	def tearDown(self):
 		self.browser.quit()
@@ -59,7 +59,7 @@ class NewVisitorTest(LiveServerTestCase):
 		
 		# A new user visits the site: Jake
 		self.browser.quit()
-		self.browser = webdriver.Chrome('C:/chromedriver.exe')
+		self.browser = webdriver.Firefox()
 		self.browser.get(self.live_server_url)
 		
 		page_body = self.browser.find_element_by_tag_name('body').text
