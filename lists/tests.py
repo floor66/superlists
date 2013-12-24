@@ -83,7 +83,7 @@ class NewListTest(TestCase):
 	
 	def test_can_POST(self):
 		self.client.post(
-			'/lists/new/',
+			'/lists/new',
 			data = {
 				'item_text': 'A new list item'
 			}
@@ -95,7 +95,7 @@ class NewListTest(TestCase):
 		
 	def test_redirects_after_POST(self):
 		response = self.client.post(
-			'/lists/new/',
+			'/lists/new',
 			data = {
 				'item_text': 'A new list item'
 			}
@@ -111,7 +111,7 @@ class NewItemTest(TestCase):
 		list_two = List.objects.create()
 		
 		self.client.post(
-			'/lists/%d/new_item/' % (list_one.id,),
+			'/lists/%d/new_item' % (list_one.id,),
 			data = {
 				'item_text': 'A new item for an existing list'
 			}
@@ -127,7 +127,7 @@ class NewItemTest(TestCase):
 		list_two = List.objects.create()
 		
 		response = self.client.post(
-			'/lists/%d/new_item/' % (list_one.id,),
+			'/lists/%d/new_item' % (list_one.id,),
 			data = {
 				'item_text': 'A new item for an existing list'
 			}
