@@ -8,15 +8,13 @@ Provisioning a new site
 * Git
 * Pip
 
-eg, on Ubuntu:
+eg, on Ubuntu 13.10:
 
-	## Downloads
-	sudo apt-get install nginx/git
-	sudo add-apt-repository ppa:fkrull/deadsnakes
 	sudo apt-get update
-	sudo apt-get install python3.3
+	sudo apt-get install nginx/git
+	sudo pip install virtualenv
+	# clone the git files, make a virtualenv in /virtualenv/, get django and gunicorn
 	
-	## TODO: add getting pip
 	
 ## Nginx Virtual Host config
 
