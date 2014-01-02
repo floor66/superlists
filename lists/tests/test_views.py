@@ -86,14 +86,12 @@ class NewListTest(TestCase):
 		expected_error = escape('You can\'t have an empty list item')
 		self.assertContains(response, expected_error)
 
-class NewItemTest(TestCase):
-	
 	def test_can_save_POST_to_existing_list(self):
 		list_one = List.objects.create()
 		list_two = List.objects.create()
 		
 		self.client.post(
-			'/lists/%d/new_item' % (list_one.id,),
+			'/lists/%d/' % (list_one.id,),
 			data = {
 				'item_text': 'A new item for an existing list'
 			}
@@ -104,12 +102,12 @@ class NewItemTest(TestCase):
 		self.assertEqual(new_item.text, 'A new item for an existing list')
 		self.assertEqual(new_item.list, list_one)
 		
-	def test_redirects_to_list_view(self):
+	def test_POST_redirects_to_list_view(self):
 		list_one = List.objects.create()
 		list_two = List.objects.create()
 		
 		response = self.client.post(
-			'/lists/%d/new_item' % (list_one.id,),
+			'/lists/%d/' % (list_one.id,),
 			data = {
 				'item_text': 'A new item for an existing list'
 			}
