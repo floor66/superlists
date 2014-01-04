@@ -6,14 +6,9 @@ from django.utils.html import escape
 
 from lists.views import home_page
 from lists.models import Item, List
-from lists.forms import ItemForm
+from lists.forms import ItemForm, EMPTY_LIST_ERROR
 
 class HomePageTest(TestCase):
-	MaxDiff = None
-	
-	def test_root_url_resolves_to_home_page_view(self):
-		found = resolve('/')
-		self.assertEqual(found.func, home_page)
 
 	def test_home_page_renders_correct_template(self):
 		response = self.client.get('/')
@@ -24,7 +19,17 @@ class HomePageTest(TestCase):
 		self.assertIsInstance(response.context['form'], ItemForm)
 
 class ListViewTest(TestCase):
-
+	
+	def post_invalid_input(self):
+		list_ = List.objects.create()
+		
+		return self.client.post(
+			'/lists/%d/' % (list_.id,),
+			data = {
+				'text': ''
+			}
+		)
+	
 	def test_uses_list_template(self):
 		list_ = List.objects.create()
 		response = self.client.get('/lists/%d/' % (list_.id,))
@@ -54,20 +59,24 @@ class ListViewTest(TestCase):
 		
 		self.assertEqual(response.context['list'], list_one)
 		
-	def test_validation_errors_end_up_on_lists_page(self):
+	def test_displays_item_form(self):
 		list_ = List.objects.create()
+		response = self.client.get('/lists/%d/' % (list_.id,))
+		self.assertIsInstance(response.context['form'], ItemForm)
+		self.assertContains(response, 'name="text"')
 		
-		response = self.client.post(
-			'/lists/%d/' % (list_.id,),
-			data = {
-				'text': ''
-			}
-		)
-		
+	def test_invalid_input_means_no_db_changes(self):
+		self.post_invalid_input()
 		self.assertEqual(Item.objects.all().count(), 0)
+		
+	def test_invalid_input_renders_list_template(self):
+		response = self.post_invalid_input()
 		self.assertTemplateUsed(response, 'list.html')
-		expected_error = escape('You can\'t have an empty list item')
-		self.assertContains(response, expected_error)
+		
+	def test_invalid_input_renders_form_with_errors(self):
+		response = self.post_invalid_input()
+		self.assertIsInstance(response.context['form'], ItemForm)
+		self.assertContains(response, escape(EMPTY_LIST_ERROR))
 
 class NewListTest(TestCase):
 	
@@ -103,8 +112,8 @@ class NewListTest(TestCase):
 
 		self.assertEqual(Item.objects.all().count(), 0)
 		self.assertTemplateUsed(response, 'home.html')
-		expected_error = escape('You can\'t have an empty list item')
-		self.assertContains(response, expected_error)
+		self.assertContains(response, escape(EMPTY_LIST_ERROR))
+		self.assertIsInstance(response.context['form'], ItemForm)
 
 	def test_can_save_POST_to_existing_list(self):
 		list_one = List.objects.create()
