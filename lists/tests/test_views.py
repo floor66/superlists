@@ -60,7 +60,7 @@ class ListViewTest(TestCase):
 		response = self.client.post(
 			'/lists/%d/' % (list_.id,),
 			data = {
-				'item_text': ''
+				'text': ''
 			}
 		)
 		
@@ -75,7 +75,7 @@ class NewListTest(TestCase):
 		self.client.post(
 			'/lists/new',
 			data = {
-				'item_text': 'A new list item'
+				'text': 'A new list item'
 			}
 		)
 		
@@ -87,7 +87,7 @@ class NewListTest(TestCase):
 		response = self.client.post(
 			'/lists/new',
 			data = {
-				'item_text': 'A new list item'
+				'text': 'A new list item'
 			}
 		)
 		
@@ -97,7 +97,7 @@ class NewListTest(TestCase):
 	def test_validation_errors_sent_back_to_home_page_template(self):
 		response = self.client.post('/lists/new',
 			data = {
-				'item_text': ''
+				'text': ''
 			}
 		)
 
@@ -113,7 +113,7 @@ class NewListTest(TestCase):
 		self.client.post(
 			'/lists/%d/' % (list_one.id,),
 			data = {
-				'item_text': 'A new item for an existing list'
+				'text': 'A new item for an existing list'
 			}
 		)
 		
@@ -129,7 +129,7 @@ class NewListTest(TestCase):
 		response = self.client.post(
 			'/lists/%d/' % (list_one.id,),
 			data = {
-				'item_text': 'A new item for an existing list'
+				'text': 'A new item for an existing list'
 			}
 		)
 	

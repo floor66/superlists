@@ -1,5 +1,7 @@
 from django.test import LiveServerTestCase
+
 from selenium import webdriver
+
 import sys
 
 class FunctionalTest(LiveServerTestCase):
@@ -29,4 +31,5 @@ class FunctionalTest(LiveServerTestCase):
 		todo_list_items = self.browser.find_elements_by_tag_name('li')
 		self.assertIn(list_item_text, [todo_list_item.text for todo_list_item in todo_list_items])
 
-		
+	def get_item_input_box(self):
+		return self.browser.find_element_by_id('id_text')
