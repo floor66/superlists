@@ -45,6 +45,7 @@ class ExistingListItemFormTest(TestCase):
 		form = ItemForm(data={
 			'text': ''
 		})
+		
 		self.assertFalse(form.is_valid())
 		self.assertEqual(
 			form.errors['text'],
@@ -57,9 +58,19 @@ class ExistingListItemFormTest(TestCase):
 		form = ExistingListItemForm(for_list=list_, data={
 			'text': 'no doubles'
 		})
+		
+
 		self.assertFalse(form.is_valid())
 		self.assertEqual(
 			form.errors['text'],
 			[DUPLICATE_ITEM_ERROR]
 		)
 		
+	def test_form_save(self):
+		list_ = List.objects.create()
+		form = ExistingListItemForm(for_list=list_, data={
+			'text': 'testing!'
+		})
+		item_ = form.save()
+		
+		self.assertEqual(item_, Item.objects.all()[0])

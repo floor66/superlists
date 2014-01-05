@@ -4,9 +4,11 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.html import escape
 
-from lists.views import home_page
 from lists.models import Item, List
-from lists.forms import ItemForm, EMPTY_LIST_ERROR
+from lists.forms import (
+	DUPLICATE_ITEM_ERROR, EMPTY_LIST_ERROR,
+	ExistingListItemForm, ItemForm
+)
 
 class HomePageTest(TestCase):
 
@@ -62,7 +64,7 @@ class ListViewTest(TestCase):
 	def test_displays_item_form(self):
 		list_ = List.objects.create()
 		response = self.client.get('/lists/%d/' % (list_.id,))
-		self.assertIsInstance(response.context['form'], ItemForm)
+		self.assertIsInstance(response.context['form'], ExistingListItemForm)
 		self.assertContains(response, 'name="text"')
 		
 	def test_invalid_input_means_no_db_changes(self):
@@ -75,7 +77,7 @@ class ListViewTest(TestCase):
 		
 	def test_invalid_input_renders_form_with_errors(self):
 		response = self.post_invalid_input()
-		self.assertIsInstance(response.context['form'], ItemForm)
+		self.assertIsInstance(response.context['form'], ExistingListItemForm)
 		self.assertContains(response, escape(EMPTY_LIST_ERROR))
 		
 	def test_duplicate_item_validation_error_ends_up_on_lists_page(self):
@@ -88,7 +90,7 @@ class ListViewTest(TestCase):
 			}
 		)
 		
-		expected_error = escape('You\'ve already got this in your list')
+		expected_error = escape(DUPLICATE_ITEM_ERROR)
 		self.assertContains(response, expected_error)
 		self.assertTemplateUsed(response, 'list.html')
 		self.assertEqual(Item.objects.all().count(), 1)
