@@ -39,7 +39,7 @@ def _update_settings(source_folder, site_name):
 	settings_path = path.join(source_folder, 'superlists/settings.py').replace('\\', '/')
 	sed(settings_path, 'DEBUG = True', 'DEBUG = False')
 	append(settings_path, 'ALLOWED_HOSTS = [\'%s\']' % (site_name,))
-	secret_key_file = path.join(source_folder, 'superlists/secrey_key.py').replace('\\', '/')
+	secret_key_file = path.join(source_folder, 'superlists/secret_key.py').replace('\\', '/')
 	if not exists(secret_key_file):
 		chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
 		key = ''. join(random.SystemRandom().choice(chars) for _ in range(50)) 
