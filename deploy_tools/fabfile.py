@@ -1,6 +1,9 @@
 from fabric.contrib.files import append, exists, sed
 from fabric.api import env, local, run
+from fabric.context_managers import settings
+
 from os import path
+
 import random
 
 REPO_URL = 'https://github.com/floor66/superlists.git'
@@ -27,7 +30,7 @@ def _create_directory_structure_if_necessary(site_name):
 	
 	run('mkdir -p %s' % (base_folder,))
 	
-	for subfolder in ('database', 'static', 'source', 'virtualen',):
+	for subfolder in ('database', 'static', 'source', 'virtualenv',):
 		run('mkdir -p %s/%s' % (base_folder, subfolder,))
 		
 def _get_latest_source(source_folder):
@@ -79,5 +82,6 @@ def _configure_upstart(source_folder):
 	
 def _start_server():
 	run('sudo service nginx reload')
-	run('sudo start gunicorn-%s' % (env.host,))
+	with settings(warn_only=True):
+		run('sudo start gunicorn-%s' % (env.host,)) # May fail if already running, so only warn
 	
