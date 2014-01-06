@@ -53,8 +53,8 @@ def _update_virtualenv(source_folder):
 	run('%s/bin/pip install -r %s/requirements.txt' % (virtualenv_folder, source_folder,))
 	
 def _update_static_files(source_folder):
-	run('cs %s && ../virtualenv/bin/python3 manage.py collectstatic --noinput' % (source_folder,))
+	run('cd %s && ../virtualenv/bin/python3 manage.py collectstatic --noinput' % (source_folder,))
 	
 def _update_database(source_folder):
-	run('cs %s && ../virtualenv/bin/python3 manage.py syncdb --noinput' % (source_folder,))
+	run('cd %s && ../virtualenv/bin/python3 manage.py syncdb --noinput' % (source_folder,))
 	
