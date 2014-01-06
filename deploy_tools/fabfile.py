@@ -65,8 +65,7 @@ def _update_static_files(source_folder):
 	
 def _update_database(source_folder):
 	run('cd %s && ../virtualenv/bin/python3 manage.py syncdb --noinput' % (source_folder,))
-	# one-off fake database migration. remove before next deploy (!)
-	run('cd %s && ../virtualenv/bin/python3 manage.py migrate lists --fake 0001' % (source_folder,))
+
 	run('cd %s && ../virtualenv/bin/python3 manage.py migrate' % (source_folder,))
 	
 def _configure_nginx(source_folder):
